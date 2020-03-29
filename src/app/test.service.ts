@@ -1,39 +1,43 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, ObservedValueOf } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const httpOptions = {
-  headers: [
-new HttpHeaders({ Authorization: 'Basic d2ViZmctdGVzdDpXVzU4WUpqODlsdFI0M0Ny'}),
-new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded'})
-
-  ]
+  headers: new HttpHeaders()
+    .set('Authorization', 'Basic d2ViZmctdGVzdDpXVzU4WUpqODlsdFI0M0Ny')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
 };
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class TestService {
+  token;
 
-constructor( private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient) { }
 
-private url = 'https://integra1.solutions.webfg.ch/restweb';
-private tokenAcess;
+  getToken(): Observable<any> {
+    const requestTokenUri = 'https://integra1.solutions.webfg.ch/restweb/oauth/token';
+    const ps = new HttpParams()
+      .set('grant_type', 'password')
+      .set('username', 'test001')
+      .set('password', 'ryby3NTyKduAMcvZ')
+      .set('scope', 'uaa.user');
+    return this._httpClient.post(requestTokenUri, ps, httpOptions);
+  }
+  getData(token): Observable<any> {
+    const httpOptionsData = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${token}`)
+    };
 
-getToken() {
-  debugger
-const requestToken ='/oauth/token?ClientID=webfg-test&Password=WW58YJj89ltR43Cr&grant_type=password&username=test001&password=ryby3NTyKduAMcvZ&scope=uaa.user';
-return this._httpClient.post(`${this.url}${requestToken}`, httpOptions);
-}
+    const requestDataUri = 'https://integra1.solutions.webfg.ch/restweb/quotes/2970161-1058-814';
 
-getCharacter(): Observable<any> {
-const headers = new Headers();
-headers.append('Authorization', `Bearer ${this.tokenAcess}`);
 
-  this.tokenAcess = this.getToken();
- const quotes= 'quotes/2970161-1058-814?fields='
-  return this._httpClient.get(`${this.url}${quotes}${headers}`);
+    return this._httpClient.get(requestDataUri, httpOptionsData);
+  }
 
-}
+
 }

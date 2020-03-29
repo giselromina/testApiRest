@@ -4,11 +4,18 @@ table{
   width: 80%;
   margin-left: 90px;
 }
-
+span{
+      position: fixed;
+    left: 172px;
+    top: 28px;
+}
 tr{
   width: 100%;
 }
+.container{
+     margin-top: 69px;
 
+}
 .c1{
   width: 50%
 }
