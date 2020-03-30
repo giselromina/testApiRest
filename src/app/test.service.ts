@@ -25,7 +25,7 @@ export class TestService {
       .set('username', 'test001')
       .set('password', 'ryby3NTyKduAMcvZ')
       .set('scope', 'uaa.user');
-    return this._httpClient.post(requestTokenUri, ps, httpOptions);
+    return this._httpClient.post(requestTokenUri, ps, httpOptions).pipe(map(res => this.token = res ));
   }
   getData(token): Observable<any> {
     const httpOptionsData = {
