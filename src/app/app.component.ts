@@ -10,13 +10,12 @@ export class AppComponent implements OnInit {
   constructor(private _testService: TestService) { }
   dataForTable;
   tableData;
-  title
+  title;
   ngOnInit() {
     this.getDataFromService();
   }
 
   getDataFromService() {
-    debugger
     let token;
     let dataFromService;
     this._testService.getToken().subscribe(
@@ -31,14 +30,9 @@ export class AppComponent implements OnInit {
   }
 
   paseDatatoTable(data) {
-
-    this.title = data[0].fields.M_NAME.v;
-    const dataForTable = data.map(e => ({
-      title : e.fields.M_NAME.v,
-      dataR : e.fields.LVAL_NORM
-      }
-      ));
-this.tableData = dataForTable[0].dataR;
+    const objectData = this._testService.paseDatatoTable(data);
+    this.title = objectData.title;
+    this.tableData = objectData.tableData;
 
   }
 

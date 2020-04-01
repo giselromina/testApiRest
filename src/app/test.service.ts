@@ -25,7 +25,7 @@ export class TestService {
       .set('username', 'test001')
       .set('password', 'ryby3NTyKduAMcvZ')
       .set('scope', 'uaa.user');
-    return this._httpClient.post(requestTokenUri, ps, httpOptions).pipe(map(res => this.token = res ));
+    return this._httpClient.post(requestTokenUri, ps, httpOptions);
   }
   getData(token): Observable<any> {
     const httpOptionsData = {
@@ -39,5 +39,18 @@ export class TestService {
     return this._httpClient.get(requestDataUri, httpOptionsData);
   }
 
-
+  paseDatatoTable(data) {
+    const title = data[0].fields.M_NAME.v;
+    const dataForTable = data.map(e => ({
+      title : e.fields.M_NAME.v,
+      dataR : e.fields.LVAL_NORM
+      }
+      ));
+    const tableData = dataForTable[0].dataR;
+    return {
+         title,
+         dataForTable,
+         tableData
+       };
+  }
 }
