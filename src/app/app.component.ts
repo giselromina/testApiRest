@@ -16,12 +16,10 @@ export class AppComponent implements OnInit {
   }
 
   getDataFromService() {
-    let token;
     let dataFromService;
     this._testService.getToken().subscribe(
-      (data: any) => {
-        token = data.access_token;
-        this._testService.getData(token).subscribe((res: any) => {
+      () => {
+      this._testService.getData().subscribe((res: any) => {
           dataFromService = res;
           this.paseDatatoTable(dataFromService.quotes);
         });

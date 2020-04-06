@@ -14,7 +14,7 @@ const httpOptions = {
 })
 
 export class TestService {
-  token;
+ private  token;
 
   constructor(private _httpClient: HttpClient) { }
 
@@ -25,16 +25,26 @@ export class TestService {
       .set('username', 'test001')
       .set('password', 'ryby3NTyKduAMcvZ')
       .set('scope', 'uaa.user');
-    return this._httpClient.post(requestTokenUri, ps, httpOptions);
+
+    const getHeaders: HttpHeaders = new HttpHeaders({
+       Authorization : 'Basic d2ViZmctdGVzdDpXVzU4WUpqODlsdFI0M0Ny',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+// tenemos dos maneras de pasar el header, como una const afuera de la funcion y pasarle luego el httpOptions
+// o como lo hice aca adentro de la funcion.
+
+    return this._httpClient.post(requestTokenUri, ps, {headers: getHeaders}).pipe(map(
+      res => this.token = res));
   }
-  getData(token): Observable<any> {
+
+  getData(): Observable<any> {
     const httpOptionsData = {
       headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${this.token.access_token}`)
     };
 
     const requestDataUri = 'https://integra1.solutions.webfg.ch/restweb/quotes/2970161-1058-814';
-
 
     return this._httpClient.get(requestDataUri, httpOptionsData);
   }
